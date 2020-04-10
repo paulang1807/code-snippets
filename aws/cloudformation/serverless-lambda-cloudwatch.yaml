@@ -1,0 +1,62 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: SAM Template for Lambda with Cloudwatch Event Trigger
+
+Parameters:
+  AuroraPass:
+    Type: String
+    Description: The password for the aurora database
+    Default: ChangeMe
+
+Globals:
+  Function:
+    Environment:
+      Variables:
+        PASSWORD: !Ref AuroraPass
+
+Resources:
+  LambdaFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src/
+      Handler: app.handler
+      Runtime: python3.6
+      MemorySize: 256
+      Timeout: 600
+      Role: arn:aws:iam::123456789:role/lambda-execution-role
+      KmsKeyArn: arn:aws:kms:us-west-2:123456789:key/083208a4-1234-34b5-x56y-1caf36dfa049
+      Environment:
+        Variables:
+          USERNAME: aurorauser
+          RETRY_COUNT: 30
+      VpcConfig:
+        SecurityGroupIds:
+          - sg-0123456ab12345ba1
+        SubnetIds:
+        - subnet-01ab12345678a123
+        - subnet-02ab12345678a123
+      Tags:
+        CFCreatedResource:
+          Fn::Sub:
+          - "CloudFormation Stack ${StackName}"
+          - StackName: !Ref "AWS::StackName"
+        Name: "oip"
+  CloudWatchLambda:
+    Type: 'AWS::Events::Rule'
+    DependsOn:
+      - LambdaFunction
+    Properties:
+      Description: Scheduled Trigger
+      ScheduleExpression: cron(0 9 1 * ? *)
+      State: "DISABLED"
+      Targets:
+        - Arn: !GetAtt LambdaFunction.Arn
+          Id: "LambdaTrigger"
+
+Outputs:
+  LambdaFunction:
+    Description: "Lambda Function ARN"
+    Value: !GetAtt LambdaFunction.Arn
+    Export:
+      Name:
+        Fn::Sub: "${AWS::StackName}"
