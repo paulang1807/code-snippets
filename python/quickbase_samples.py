@@ -27,10 +27,11 @@ df1=pd.read_csv(io.StringIO(response.decode('ISO-8859-1')))
 # Using a dummy dataframe here. This should be replaced with the dataframe containing data
 df = pd.DataFrame()  
 for indx, row in df.iterrows():
-    valToInsert = row['colName']
+    # Handle special characters in the value to insert
+    valToInsert = row['colName'].replace('&', '%26').replace('“', '"').replace('”', '"').replace('’', "'")
     metricQry= "https://domain.quickbase.com/db/{}?a=API_AddRecord&".format(dbID)
     metricQry += "usertoken={}&apptoken={}}&".format(userToken, appToken)
-    metricQry += "_fid_6={}".format(valToInsert)
+    metricQry += "_fid_6={}&encoding=UTF-8".format(valToInsert)
     requests.get(metricQry).content
 
 # Query table so that resultset includes record id and update id
