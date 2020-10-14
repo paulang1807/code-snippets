@@ -55,9 +55,19 @@ db_name="oip"     # database name
 # Prepare query
 argDt = "somedate"
 arg1Val="someval"
+arg2Val=None
+
+# Null check if needed
+if not arg2Val:
+    arg2Key='isNull'
+    arg2Val = True
+else:
+    arg2Key = 'stringValue'
+
 argDt = datetime.datetime.strptime(argDt, '%Y-%m-%dT%H:%M:%S.%fZ')   # convert date to UTC date string
 args = [{'name':'arg1', 'value':{'stringValue': f'{arg1Val}'}},
-        {'name':'argDt', 'value':{'stringValue': f'{argDt}'}}]
+        {'name':'argDt', 'value':{'stringValue': f'{argDt}'}},
+        {'name':'arg2', 'value':{arg2Key: arg2Val}}]
 query="select * from db.table where a=:arg1 and b=:argDt;"
 
 client = boto3.client('rds-data')
