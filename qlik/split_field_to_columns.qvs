@@ -1,0 +1,79 @@
+// Code Snippet to split a string of url parameters into individual columns
+// Based on https://community.qlik.com/t5/QlikView-App-Development/loop-within-a-load-in-the-script/td-p/4202
+
+
+TableTemp:
+Load *,
+replace(replace(queryString,'?',''),'&','^') as queryStringTmp, // Replace & with ^ as & is the concat operator in Qlik
+SubStringCount(queryString,'&') + 1 as paramCount;   // Count Number of filter parameters in the url
+load * Inline [
+queryString
+?tab=Self-Serve%20Data
+?tab=Dashboard
+?id=34
+?tab=Dashboard&id=34
+?tab=Self-Serve%20Data&id=48
+?id=348&tab=Self-Serve%20Pasta
+?id=548&tab=Dashboards
+];
+
+// Get the maximum number of filter parameters in the url fields across all records
+NoConcatenate
+TableTemp2:
+Load Max(paramCount) as MaxParmCt Resident TableTemp;
+
+Let ctr=Peek('MaxParmCt');
+
+// Loop to separate out the filter name and values into separate columns
+f=;
+g=;
+FOR i=1 TO $(ctr)
+  p='SubField(queryStringTmp,'&Chr(39)&'^'&Chr(39)&','&i&')';
+  f=f&'  Subfield('&p&','&Chr(39)&'='&Chr(39)&',2) AS CVal'&i&If(i<$(ctr),',')&Chr(10);
+  g=g&'  Subfield('&p&','&Chr(39)&'='&Chr(39)&',1) AS CCol'&i&If(i<$(ctr),',')&Chr(10);
+NEXT
+
+NoConcatenate
+TableTemp3:
+LOAD 
+RowNo() AS R#,queryString,
+    $(f), $(g)
+Resident TableTemp;
+
+// Combine all filter names into single column and all corresponding filter values into another column
+// This will create multiple rows for each record - each row corresponding to a single filter
+FOR i = 1 TO $(ctr)
+  TableTemp4:
+LET dataCol = 'CCol'&(i);
+LET dataVal = 'CVal'&(i);
+Load queryString, 
+$(dataVal) as DataVal,
+$(dataCol) as DataCol
+Resident TableTemp3
+where Len(Trim($(dataCol))) > 0;
+NEXT
+
+// Create separate columns based on filter names and merge all rows for a single record in a single row
+TableTemp5:
+Generic Load queryString,
+			'filter_' & DataCol,
+            DataVal
+Resident TableTemp4;
+
+NoConcatenate
+FinalTable:
+Load Distinct
+			queryString
+Resident TableTemp4;
+
+FOR i = NoOfTables()-1 to 0 STEP -1 
+  LET vTable=TableName($(i)); 
+  IF WildMatch('$(vTable)', 'TableTemp5.*') THEN 
+    LEFT JOIN (FinalTable) LOAD * RESIDENT    [$(vTable)]; 
+    DROP TABLE  [$(vTable)]; 
+  ENDIF 
+NEXT i
+
+Drop Tables TableTemp3, TableTemp2, TableTemp, TableTemp4;
+
+Exit Script;
