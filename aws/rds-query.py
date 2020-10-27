@@ -29,7 +29,7 @@ def formatRecords(response):
     
     # Extract the column names in a list
     for indx,coldict in enumerate(dictColNames):
-        lstColNames.append(coldict['name'])
+        lstColNames.append(coldict['label'])   # Use label as it gives us the aliases as opposed to name which gives us column names
         
     for record in dictColVals:    # Loop through the resultset
         dictRecVals = {}
