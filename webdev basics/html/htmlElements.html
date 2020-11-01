@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+  <head>
+        <meta charset="utf-8">
+        <meta name="description" content="Any description for the page">
+        <!-- This shows up as tab name -->
+        <title>MyHTML</title>
+        <link rel="stylesheet" href="../css/style.css">
+        <script src="js/script.js" type="text/javascript"></script>
+        <!-- Check if IE version is greater then or equal to 6 and do something -->
+        <!--[if IE gte 6]><link href="stupidie.css" rel="stylesheet"><![endif]-->
+  </head>
+  <body>
+    <!-- Main Heading, covers entire width -->
+    <h1 id="mainhdg">Page Heading</h1>
+    <!-- Navigation - sits on top of content border (defined in the css) -->
+    <div id="lftnav">
+      <h4>Nav1</h4  >
+        <!-- Unordered List -->
+        <ul>
+          <li>Nav1 Item 1</li>
+          <li>Nav1 Item 2</li>
+        </ul>
+      <h4>Nav2</h4  >
+        <ul>
+          <li>Nav2 Item 1</li>
+          <li>Nav2 Item 2</li>
+        </ul>
+    </div>
+    <!-- Main content of the page -->
+
+    <div id="content">
+      <!-- The div content is positioned based on the 'float: left' style -->
+      <div id="col1">
+        <h2>Float Column 1</h2>
+        <h5>Text Format Examples</h5>
+        <p id="para-style">An <em>emphasis tag</em> with font and background color styling.</p>
+        <p> <abbr title="Abbreviation Expansion here"><b>Abbreviation example</b></abbr> (hover for details) with <strong>strong</strong> styling</p>
+        <p><dfn title="An example of including a definition on hover"><b>definition on hover</b></dfn></p> 
+        <p>Superscript<sup>1</sup> Subscript<sub>2</sub></p>
+        <p style="font-size: .75em;">Inine Styling</p>
+      </div>
+      <!-- The div content is positioned based on the 'float: left' style -->
+      <div id="col2">
+        <h2>Float Column 2</h2>
+        <h5>List Examples</h5>
+          <ul>
+              <li>Unordered List Item 1</li>
+              <li>
+                Unordered List Item 2
+                  <!-- Ordered List -->
+                  <ol>
+                      <li>Ordered List Item 1</li>
+                      <li>Ordered List Item 2</li>
+                  </ol>
+              </li>
+          </ul>
+        </div>
+        <!-- The div content is positioned based on the 'float: left' style -->
+        <div id="col3">
+          <h2>Float Column 3</h2>
+          <h5>Link Examples</h5>
+            <p><a href="http://www.htmldog.com" tabindex="1" title="Some Title" accesskey="h">HTML Dog</a></p>
+            <p><a href="http://www.htmldog.com" target="_blank" tabindex="2">Link opens in a new tab</a></p>
+        </div>
+        <h3 id="clr"><hr>Clear previous floating style with <i>clear</i> css property</h3>
+        <hr>
+        <dl>
+            <h4>Description Lists:</h4>
+            <dt>Description Name 1</dt>
+            <dd>Description Value 1</dd>
+
+            <dt>Description Name 2</dt>
+            <dd>Description Value 1</dd>
+            <dd>Description Value 2</dd>
+        </dl>
+        <hr>
+
+        <p class="pseudo">First Letter and first line styling with pseudo<br>Second Line.</p>
+        <hr>
+        <p id="box-style">Example of adding <mark>Highlight</mark> within a box styled with css border and margin.</p>
+        <hr>
+        <!-- Table Related tags -->
+        <table>
+          <caption>Table caption with position defined by caption-side css</caption>
+          <!-- Column Groups -->
+          <colgroup>
+            <col class="col-color1">
+            <col>
+            <col span="2" class="col-color2">    <!-- This tag applies to two columns (span =2) -->
+          </colgroup>
+          <thead>   <!-- Column Labels -->
+            <tr>
+                <th>Column 1 heading</th>
+                <th>Column 2 heading</th>
+                <th>Column 3 heading</th>
+                <th>Column 4 heading</th>
+            </tr>
+          </thead>
+          <tbody>  <!-- Table body -->
+            <tr>
+                <td>Row 2, cell 1</td>
+                <td colspan="2">Row 2, cell 2, also spanning Row 2, cell 3</td>
+                <td>Row 2, cell 4</td>
+            </tr>
+            <tr>
+                <td rowspan="2">Row 3, cell 1, also spanning Row 4, cell 1</td>
+                <td>Row 3, cell 2</td>
+                <td>Row 3, cell 3</td>
+                <td>Row 3, cell 4</td>
+            </tr>
+            <tr>
+                <td>Row 4, cell 2</td>
+                <td>Row 4, cell 3</td>
+                <td>Row 4, cell 4</td>
+            </tr>
+          </tbody>      <!-- Column Footer or Totals -->
+          <tfoot>
+            <tr>
+                <td>Footer 1</td>
+                <td>Footer 2</td>
+                <td>Footer 3</td>
+                <td>Footer 4</td>
+            </tr>
+          </tfoot>
+        </table>
+        <hr>
+
+        <!-- Form related tags -->
+        <!-- The commented line below will result in the form's action being set to BASE_URL/test.php
+            where BASE_URL is the url of the current html file -->
+        <!-- <form action="test.php" method="post"> -->
+        <form>
+          <fieldset>   <!-- Set of form controls grouped under a common name -->
+            <legend>Form Group Name</legend>  <!-- Caption for the form control group -->
+
+            <!-- Text Inputs -->
+            <label for="inpText">Text</label>     <!-- Label for text input -->
+              <!-- remember: 'type="text"' is the default -->
+            <input type="text" placeholder="default" name="inpTextName" id="inpText"><br>
+            <label for="inpPwd">Password</label>
+            <input type="password" name="inpPwd" id="inpPwdName"><br>  <!-- Masks the input -->
+
+            <label for="srch">Enter Search Text</label> 
+            <input type="search" name="search" autofocus placeholder="Search text" id="srch"> <br> <!-- Search Input -->
+            <!-- Number input with up down arrows that increase or decrease the input based on the step specified -->
+            <label for="inpNum">Number Selector (use arrow buttons in the selector if needed)</label> 
+            <input type="number" name="quantity" step="2" min="20" max="30" value="24" id="inpNum">  <br> 
+            <label for="inpNum">Select Color</label> 
+            <input type="color" name="col-sel" id="inpNum"> <br>   <!-- Color Selector -->
+
+            <textarea rows="5" cols="20">A big load of text</textarea><br>   <!-- Text Area -->
+          </fieldset>
+
+          <!-- Checkbox -->
+          <p class="frmoptns">Check One or More:</p>
+          <p><input type="checkbox" checked name="chkbx" value"cbx1">Box1</p>  <!-- checked property checks the box by default -->
+          <p><input type="checkbox" name="chkbx" value"cbx2">Box2</p>
+
+          <!-- Radio Buttons -->
+          <p class="frmoptns">Select One:</p>
+          <p><input type="radio" selected name="radiobtn" value="radio1">Radio1</p>   <!-- selected property selects the option by default -->
+          <p><input type="radio" name="radiobtn" value="radio2">Radio2</p>
+
+          <!-- Option Group -->
+          <label for="country">Option Group (dropdown with grouped options)</label><br>
+          <select name="country">
+            <optgroup label="Africa">
+                <option value="gam">Gambia</option>
+                <option value="mad">Madagascar</option>
+                <option value="nam">Namibia</option>
+            </optgroup>
+            <optgroup label="Europe">
+                <option value="fra" selected>France</option>
+                <option value="rus">Russia</option>
+                <option value="uk">UK</option>
+            </optgroup>
+          </select><br><br>
+
+          <!-- Datalist Dropdown -->
+          <label for="country_name">Datalist Countryname</label><br>
+          <input name="country" list="country_name">
+          <datalist id="country_name">
+              <option value="Afghanistan">
+              <option value="Albania">
+              <option value="Algeria">
+              <option value="Andorra">
+              <option value="Armenia">
+              <option value="Australia">
+              <option value="Austria">
+              <option value="Azerbaijan">
+              <!-- etc. -->
+          </datalist><br><br>
+
+          <!-- Submit Button -->
+          <input type="submit" value="Submit">
+        </form>
+        <hr>
+
+        <!-- Embedding Images -->
+        <p><b>Embedded Image:</b></p>
+        <img src="../images/img1.jpg" width="120" height="90" alt="Test Image">
+
+        <!-- Embedded Audio and Video -->
+        <div class="disp">
+          <p><b>Click Play to start video</b></p>
+          <video src="../images/sample.mp4"  poster="fluffy.jpg" width="300" height="200" controls><img src="../images/img1.jpg" alt="Alt Text"></video>
+          <p><b>Video on Autoplay</b></p>
+          <!-- <video src="kitties.mp4" autoplay></video> -->
+          <video src="../images/sample.mp4" width="300" height="200" loop muted autoplay controls></video>
+
+          <!-- <video controls>
+              <source src="kitties.mp4" type="video/mp4; codecs='avc1, mp4a'">
+              <source src="kitties.webm" type="video/webm; codecs='vp8.0, vorbis'">
+              <p>Browser no likey HTML 5.</p>
+          </video> -->
+
+          <p><b>Embedded Audio</b></p>
+          <audio src="meow_mix.mp3" controls>
+              Your stupid browser doesn't support HTML 5 audio.
+          </audio>
+        </div>
+
+        <p style="font-size: 1.5em;">Canvas Content</p>
+        <canvas id="wittykitty" width="800" height="450">
+            <!-- Fall-back content here, just like with video and audio -->
+        </canvas>
+
+    </div>
+
+    <!-- Docked Link on page bottom right had side -->
+    <p id="fixed-link"><a href="#mainhdg">Go To Main Heading</a></p>
+
+  </body>
+</html>

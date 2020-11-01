@@ -1,0 +1,213 @@
+body {
+    font-family: arial, helvetica, sans-serif;
+    font-size: 14px;
+    color: black;
+    background-color: #ffc;
+    margin: 0;
+    padding: 0;
+}
+
+/* Headings */
+h1 {
+    color: #ffc;
+    background-color: #900;
+    font-size: 2em;
+    margin: 0;
+    /* margin-bottom: 7px; */
+    padding: 4px;
+    font-style: italic;
+    text-align: center;
+    /* letter-spacing: 0.5em; */
+    word-spacing: 0.5em;
+    border-bottom-style: solid;
+    border-bottom-width: 0.5em;
+    border-bottom-color: #c00;
+    text-transform: capitalize;
+}
+
+h2 {
+    color: white;   /* Text Color */
+    background-color: #090;
+    font-size: 1.5em;
+    margin: 0;
+    padding: 2px;
+    padding-left: 14px;
+    text-align: center;
+}
+
+h3 {
+    color: #999;
+    font-size: 1.25em;
+}
+
+h5 {
+    color: white;   /* Text Color */
+    background-color: #090;
+    margin: 0;
+    padding: 2px;
+    padding-left: 14px;
+    text-align: center;
+}
+
+/* Fixed Link on page body */
+#fixed-link {
+  position: fixed;
+  bottom:0;
+  right: 0;
+  background-color: #968;
+  color: #123;
+}
+
+/* Div Styles */
+#mainhdg {
+  position: fixed;
+  width: 100%;
+}
+
+#lftnav {
+  position: fixed;
+  top:50px;
+  width: 10em;
+  color: #111;
+  margin-left: 15px;
+  list-style: none;
+}
+
+#content {
+  padding-top: 55px;
+  border-left: 12em solid #3cf;
+}
+
+/* Floating Columns in Div */
+#col1 {
+  width: 32%;
+  /* This will anchor the html object to the left. If there is any other html object defined before this, 
+  it will stick to the right of that object. */
+  float: left; 
+}
+
+#col2 {
+  width: 36%;
+  float: left;
+}
+
+#col3 {
+  float: left;
+  width: 32%;
+}
+
+/* Paragraph */
+p {
+    /* letter-spacing: 0.5em; */
+    /* word-spacing: 1em; */
+    line-height: 21px;
+}
+
+/* Emphasis in Paragrapth tag */
+#para-style em{
+  font-size: 1.75em;
+  background-color: #69f;
+}
+
+strong {
+  font-style: italic;
+  text-transform: uppercase;
+}
+
+/* Lists */
+li {
+    color: #900;
+    font-style: italic;
+}
+
+ol li {
+   color: #958;
+}
+
+/* Links */
+a {
+  text-decoration: none;
+}
+
+a:visited {
+  color: #f83;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Clear */
+#clr {
+  clear: both;
+}
+
+/* Pseudo */
+p.pseudo:first-letter {
+  font-size: 48px;
+  color: green;
+}
+
+p.pseudo:first-line {
+  font-size: 24px;
+}
+
+/* Box Style */
+#box-style {
+      font: italic bold 14px/1.5 "Times New Roman", times, serif;
+      padding: 30px 10px;
+      border: 1px black solid;
+      border-width: 1px 5px 5px 1px;
+      border-color: red green blue yellow;
+      margin: 10px 50px;
+}
+
+/* Table Styling */
+table {
+    background-color: #ccc;
+    caption-side: bottom;
+}
+/* Define table caption styling */
+caption {
+  font-weight: bold;
+  font-size: 1em;
+}
+/* Table column styles */
+.col-color1 {
+  background-color: #47d;
+}
+
+.col-color2 {
+  background-color: #f7d;
+}
+/* Table footer and header styles */
+tfoot, thead {
+  font-weight: bold;
+  color: red;
+}
+
+input:focus {
+  background: #e5f;
+}
+
+input[type=search] {
+  background: white url(../images/mag_gls.jpg) right no-repeat;
+}
+
+/* Checkbox and Radio Button Labels */
+.frmoptns {
+  font-weight: bold;
+  font-style: italic;
+}
+
+
+img {
+  border-style: dashed;
+  border-width: 2px;
+  border-color: #ccc;
+}
+
+div.disp video{
+  display: block;
+  padding: 5px 5px;
+}
