@@ -1,0 +1,16 @@
+.fancy{
+    font-family: Arial, Helvetica, sans-serif;
+}
+.fancy td, .fancy th{
+padding: 5px 20px;
+}
+.fancy th{
+background-color: #336699;
+color: #fff;
+}
+.decimal{
+text-align: right;
+}
+.even{
+background-color: #ccccff;
+}
