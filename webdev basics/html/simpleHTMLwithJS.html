@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>HTML and JS Jumpstart</title>
+    <!-- <link rel="stylesheet" href="../css/jsbasics.css"> -->
+    <script src="../js/script.js" type="text/javascript"></script>
+  </head>
+  <body>
+      <form>
+        <h6>Enter the temperature to be converted in the area below.
+          <br>If you wish to convert from Celcius to Farenheit, the nuber should be followed by a 'F', else it should be followed by an 'C'</h6>
+        <input name="inpTemp" rows="1" cols="5" id="txtTemp" placeholder="Input Temperature"></input><br><br>
+        <button type="button" name="btnTmpConv" onclick="callConvTemp(document.getElementById('txtTemp').value)">Convert</button>
+        <button type="button" name="btnReset" onclick="document.getElementById('txtTemp').value=''">Reset</button>
+        <!-- Element for javascript result -->
+        <h3 id="rslt"><h3>
+      </form>
+    </div>
+  </body>
+</html>

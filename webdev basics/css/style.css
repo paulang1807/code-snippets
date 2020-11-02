@@ -185,7 +185,12 @@ tfoot, thead {
   font-weight: bold;
   color: red;
 }
+/* Define color for alternate rows of table */
+tr:nth-child(even){
+  background-color: #63c7ff;
+}
 
+/* Form Input Controls Styling */
 input:focus {
   background: #e5f;
 }
