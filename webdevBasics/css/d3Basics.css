@@ -1,0 +1,9 @@
+.pt {
+  fill: steelblue;
+  stroke: #000;
+}
+rect {
+  fill: none;
+  stroke: black;
+  stroke-width: 1px;
+}
