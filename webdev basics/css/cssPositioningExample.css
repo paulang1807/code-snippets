@@ -1,0 +1,58 @@
+/* No position specified for parent. Child positioning will depend on the individual position settings for the child elements */
+#parent {
+    background-color: grey;
+    height: 300px;
+    width: 300px;
+    /* position: relative; */
+    /* position: absolute; */
+    /* Using inline-block display (see commented section below) changes the default positioning to horizontal 
+    but may add a small gap between the elements. The following helps in getting rid of the gap (see gif) */
+    /* font-size: 0; */
+    /* Add the following to get the child elements arranged horizontally */
+    display: flex;
+  }
+  
+  /* Default positioning is one below the other */
+  #one {
+    background-color: red;
+    height: 100px;
+    width: 100px;
+    /* The following will position the elements horizontally instead of vertically. Need to add it to all the elements.
+    A better option is to add display:flex to the parent to get the same results. */
+    /* display: inline-block;    */
+  }
+  /* Setting position to relative will set the position relative to what it would be for default.
+     In the example below, the default position would be directly below the div corresponding to style with id 'one'
+     However, since the position is set to relative, the div corresponding to this style will be positioned with a 
+     space of 20px to the left and 20 px to the top relative to the div corresponding to style with id 'one'*/
+  #two {
+    background-color: blue;
+    height: 100px;
+    width: 100px;
+    /* position: relative;
+    left: 20px;
+    top: 20px; */
+    /* display: inline-block;    */
+  }
+  /* In the example below, the default position will be below the default position of the div corresponding to style with id 'two'
+     Note that it will not take the relative adjustment of that div into account.*/
+  #three {
+    background-color: yellow;
+    height: 100px;
+    width: 100px;
+    /* top: 20px;
+    left:40px; */
+    /* display: inline-block;    */
+  }
+  /* Setting position to absolute will set the absolute position to what is specified. 
+     In the example below, the default position would have been below the default position of the div corresponding to style with id 'three'
+     However setting the position to absolute will result in this div disregarding the position of the other elements.*/
+#four {
+    background-color: green;
+    height: 100px;
+    width: 100px;
+    /* position: absolute;
+    top: 20px;
+    left:40px; */
+    /* display: inline-block;    */
+  }
