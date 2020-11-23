@@ -1,0 +1,118 @@
+body {
+    margin: 0;
+}
+
+/* Container Fluid */
+
+.container-fluid {
+    padding: 5% 10%;
+}
+
+/* Navigation Bar */
+
+.navbar {
+    /* display: flex; */  /* Replaced by bootstrap */
+    padding: 0.5rem 10%;
+}
+
+.navbar-brand {
+    font-family: 'Open Sans';
+    font-weight: 800;
+    font-size: 2.5rem;
+    /* margin-top: auto;
+    margin-bottom: auto;
+    margin-right: auto; */  /* Replaced by bootstrap */
+}
+
+.navbar-nav {
+    /* display: flex; */  /* Replaced by bootstrap */
+    list-style-type: none;
+}
+
+.navbar-link {
+    padding: 0 18px;
+    font-size: 1.2rem;
+}
+
+.navbar-link > a {
+    text-decoration: none;
+    color: #000;
+    font-family: 'Open Sans';
+    font-weight: 600;
+}
+
+/* Hero Section */
+
+.hero {
+    padding: 10%;
+}
+
+.hero-banner {
+    padding-bottom: 5%;
+    font-size: 3rem;
+}
+
+.parent {
+    /* This property is used for defining layers - what shows up in front, middle, back etc. */
+    z-index: 1;
+}
+
+.hero-img {
+    position: absolute;
+    z-index: -1;
+    background-image: url(../images/peaches.jpg);
+    opacity: 0.6;
+    height: 100%;
+    width: 100%;
+    /* The following helps fit the background image within the object bounds */
+    background-size: cover;
+}
+
+/* Feature List */
+
+.features {
+    text-align: center;
+}
+
+.feature-box {
+    padding: 10% 5%;
+}
+
+.feature-title {
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+.icon {
+    color: #333333;
+    margin-bottom: 1rem;
+}
+
+/* Contact */
+.contact-text {
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+.contact {
+    padding: 5% 10%;
+}
+
+.contact-color {
+    background-color: #f1f0e2;
+}
+
+.input-group {
+    padding-right: 20%;
+}
+
+/* Footer */
+
+.footer-text {
+    text-align: center;
+    color: #fff;
+}
+
+.footer {
+    background-color: #3e4e59;
+}
