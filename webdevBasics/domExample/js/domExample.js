@@ -56,7 +56,6 @@ function genRandomColor() {
     return "rgb(" + r + ", " + g + ", " + b +")";
 }
 
-// Higher Order Function
 function generateRandomColors(num) {
     var arrColor = new Array();
 
