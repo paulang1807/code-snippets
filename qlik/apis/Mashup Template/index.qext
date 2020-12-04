@@ -1,0 +1,10 @@
+{
+    "type": "mashup",
+    "name": "Mashup Dashboard",
+    "description": "Mashup Dashboard Template",
+    "author": "Angshuman Paul",
+    "version": "1.0.0",
+    "dependencies": {
+        "qlik-sense": ">=3.0.x"
+    }
+}
