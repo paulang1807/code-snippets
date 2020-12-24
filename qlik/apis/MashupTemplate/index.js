@@ -46,6 +46,7 @@ require(['js/qlik'],function(qlik){
     var app = qlik.openApp(appId, config)
     // Exporting qlik to have global scope
     window.qlik = qlik
+    window.app = app
     
     // Require app.js
     require({context: 'appRequire'}, ['./app'])

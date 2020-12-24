@@ -145,4 +145,27 @@ button {
     }
 }
 
+/* Bookmark */
+.bm-list {
+    padding-top: 20px;
+}
 
+.bm-list-item {
+    display: flex;
+    align-items: center;
+}
+
+.bm-list-item .bm-item-title{
+    cursor: pointer;
+}
+
+.bm-list-item .bm-item-desc{
+    cursor: pointer;
+    padding-left: 10px;
+}
+
+.bm_rmv {
+    cursor: pointer;
+	margin-left: auto;
+    padding: 0 10px;
+}

@@ -64,16 +64,63 @@
             </div>
         </div>
         <!-- Icons -->
-        <span id="undo" class="icon control"><i class="fas fa-undo-alt"></i></span>
-        <span class="icon control"><i class="fas fa-redo-alt"></i></span>
-        <span class="icon control"><i class="fas fa-times"></i></span>
-        <span id="bookmark" class="icon"><i class="fas fa-bookmark"></i></span>
-        <span class="icon"><i class="fas fa-filter"></i></span>
+        <span id="undo" class="icon control" data-control="back"><i class="fas fa-undo-alt"></i></span>
+        <span class="icon control" data-control="forward"><i class="fas fa-redo-alt"></i></span>
+        <span class="icon control" data-control="clear"><i class="fas fa-times"></i></span>
+        <span id="bookmark" class="icon" data-toggle="modal" data-target="#bookmarkModal"><i class="fas fa-bookmark"></i></span>
+        <span class="icon" data-toggle="modal" data-target="#selectionsModal"><i class="fas fa-filter"></i></span>
     </nav>
 
     <!-- Title -->
     <div class="heading">Mashup Dashboard</div>
     <div class="list1"></div>
+
+    <!-- Bookmark Modal -->
+    <div class="modal fade" id="bookmarkModal" tabindex="-1" aria-labelledby="bookmarkModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="bookmarkModalLabel">Bookmarks</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+                <form id="form-modal">
+                    <label for="bmTitle" class="control-label">Title:</label>
+                    <input type="text" class="form-control" id="bmTitle">
+                    <label for="bmDesc" class="control-label">Description:</label>
+                    <input type="text" class="form-control" id="bmDesc">
+                </form>
+            </div>
+            <ul class="bm-list"></ul>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-primary bmNew">New</button>
+            <button type="button" class="btn btn-primary bmCreate" disabled data-dismiss="modal">Create</button>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <!-- Selections Modal -->
+    <div class="modal fade" id="selectionsModal" tabindex="-1" aria-labelledby="selectionsModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="selectionsModalLabel">Current Selections</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+            ...
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+        </div>
+    </div>
 </body>
 
 </html>
