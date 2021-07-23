@@ -1,0 +1,16 @@
+// Subroutime to calculate load stats for tables
+// This can be called using the following syntax after each table load to get the corresponding load stats.
+// Call ExtractStats('table_name')
+LET vStart = now();
+
+Sub ExtractStats (_table)
+ExtractStats:
+Unqualify *;
+Load
+	now() as ExtractTime,
+	'$(_table)' as TableName,
+    NoOfRows('$(_table)') as TableRows
+AutoGenerate 1
+;
+End Sub
+
