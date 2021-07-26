@@ -1,0 +1,101 @@
+// Code Snippet to parse a json column containing repeating groups of key value pairs
+// Example JSON:
+        // {
+        // "target": [
+        //     {
+        //     "color": "Green",
+        //     "upper_bound": 100.00,
+        //     "lower_bound": 80.00,
+        //     "sla": 4000 
+        //     },
+        //     {
+        //     "color": "Yellow",
+        //     "upper_bound": 100.00,
+        //     "lower_bound": 80.00,
+        //     "sla": 10000 
+        //     },
+        //     {
+        //     "color": "Red",
+        //     "upper_bound": 100.00,
+        //     "lower_bound": 0.00,
+        //     "sla": 10000 
+        //     }
+        // ]
+        // }
+
+
+BaseTable:
+LOAD distinct
+base_table_id, threshold,
+replace(TextBetween(threshold, '"target": [',']'),'},','}|') as threshold_tgt  // Get the json to be parsed in a new field
+FROM lib://PathToQVD/BaseTable.qvd (qvd);
+
+// Find out the number of repeating key value groups to be processed
+Let vNumThresholds = SubStringCount(Peek('threshold_tgt',-1,'BaseTable'),'}|') + 1;
+Trace Number of Thresholds is $(vNumThresholds);
+	
+// Change delimiter separating the groups (from comma to pipe)
+// for easy differentiation between the group vs individual key value within the groups
+For x = 1 to $(vNumThresholds) Step 1
+	LEFT JOIN (BaseTable) LOAD base_table_id, 
+    	trim(replace(replace(SubField(threshold_tgt, '|', $(x)),'{',''),'}','')) as  'threshold$(x)' RESIDENT BaseTable;
+Next x
+
+Drop Field threshold_tgt;
+
+// Loop through and process each threshold group
+For y = 1 to $(vNumThresholds) Step 1
+  Let vThresholdFieldName = 'threshold' & $(y);
+  Let vKeyValFieldName = 'key_val' & $(y);
+  Let vKeyFieldName = 'Key' & $(y);
+  Let vValueFieldName = 'Value' & $(y);
+
+// Split each threshold group into separate tables using Generic Load
+  TSplit:
+  Generic
+  LOAD
+  base_table_id,
+  TextBetween([$(vKeyFieldName)], '"', '"') as '$(vKeyFieldName)',
+  replace([$(vValueFieldName)], '"', '') as '$(vValueFieldName)'
+  ;
+  LOAD
+  base_table_id,
+  SubField([$(vKeyValFieldName)], ':', 1) as '$(vKeyFieldName)',
+  SubField([$(vKeyValFieldName)], ':', 2) as '$(vValueFieldName)'
+  ;
+  LOAD
+  base_table_id,
+  SubField([$(vThresholdFieldName)], ',') as '$(vKeyValFieldName)'
+  Resident BaseTable
+  ;
+
+// Find the color of the group being processed
+  Let vColor = Peek('color',-1,'TSplit.color');
+  Trace Processing threshold for $(vColor);
+
+  FOR i = NoOfTables()-1 to 0 STEP -1 
+    LET vTable=TableName($(i)); 
+    Trace Processing $(vTable);
+
+// Merge the generic tables back to the base table
+    IF WildMatch('$(vTable)', 'TSplit.*') THEN 
+      FOR j = 0 to NoOfFields('$(vTable)') STEP 1
+          LET vColName=FieldName($(j), '$(vTable)'); 
+        //   Rename all columns other than the id to differentiate between the groups in the final table
+          IF Not Match('$(vColName)', 'base_table_id') THEN
+              Trace Rename Field $(vColName) to $(vColor)_$(vColName);
+              Rename Field '$(vColName)' to '$(vColor)_$(vColName)';
+          ENDIF
+      NEXT j
+    //   No need to merge the color as a column as the corresponding column names will have the color in the column name itself
+      IF Not Match('$(vTable)', 'TSplit.color') THEN
+          Trace Now Processing $(vTable);
+          LEFT JOIN (BaseTable) LOAD * RESIDENT [$(vTable)]; 
+      END IF
+      DROP TABLE  [$(vTable)];
+    ENDIF  
+  NEXT i
+  Drop Field [$(vThresholdFieldName)];
+Next y
+
+Exit Script;
