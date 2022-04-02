@@ -15,12 +15,12 @@
   pandas==0.22.0
   ```
 - Run the following command in the terminal
-  ```shell
+  ```bash
   docker run -v "$PWD":/var/task "public.ecr.aws/sam/build-python3.8" /bin/sh -c "pip install -r requirements.txt -t python/lib/python3.8/site-packages/; exit"
   ```
   - This will create a folder and add the output of the `pip install` command in the folder.
 - Zip the folder created above
-  ```shell
+  ```bash
   zip -r <zip_file_name>.zip python > /dev/null
   ```
 -Upload the zip file to s3
