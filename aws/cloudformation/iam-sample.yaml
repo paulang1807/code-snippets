@@ -1,0 +1,57 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: IAM Role template
+Parameters:
+  LambdaRoleName:
+    Type: String
+    Description: Name of lambda IAM role
+    Default: "test-lambda-role"
+  SecretManagerARN:
+    Type: String
+    Description: ARN of Secrets Manager secret
+  KMSARN:
+    Type: String
+    Description: ARN of KMS
+Resources:
+  LambdaExecutionRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      RoleName: !Ref LambdaRoleName
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/AmazonAPIGatewayInvokeFullAccess'
+        - 'arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs'
+        - 'arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole'
+      Policies:
+        - PolicyName: SecretManagerPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 'secretsmanager:GetSecretValue'
+                Resource:
+                  - !Ref SecretManagerARN
+        - PolicyName: KMSPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 'kms:Decrypt'
+                  - 'kms:DescribeKey'
+                Resource:
+                  - !Ref KMSARN
+Outputs:
+  LambdaRole:
+    Description: "Lambda Role ARN"
+    Value: !GetAtt LambdaExecutionRole.Arn
+    Export:
+      Name: "lambda-role-arn"

@@ -1,0 +1,129 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Private Rest api with access to vpc endpoints from two accounts
+Parameters:
+  ApiName:
+    Type: String
+    Description: Name for the REST API
+    Default: my-test-api
+  FirstVPCEndpoint:
+    Type: String
+    Description: VPC Endpoint for the first account
+  SecondVPCEndpoint:
+    Type: String
+    Description: VPC Endpoint for the second account
+  ResourcePath:
+    Type: String
+    Description: Path for the API resource
+    Default: test-path
+  StageName:
+    Type: String
+    Description: Name for API Deployment Stage
+    Default: stg
+Resources:
+  PrivateRestApi:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: !Ref ApiName
+      EndpointConfiguration:
+        Types:
+          - PRIVATE
+      Policy:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Deny
+            Principal: '*'
+            Action: 'execute-api:Invoke'
+            Resource: !Sub 'arn:aws:execute-api:us-west-2:${AWS::AccountId}:*/*/*/*'
+            Condition:
+              ForAnyValue:StringNotEquals:
+                aws:sourceVpce:
+                  - !Ref FirstVPCEndpoint
+                  - !Ref SecondVPCEndpoint
+          - Effect: Allow
+            Principal: '*'
+            Action: 'execute-api:Invoke'
+            Resource: !Sub 'arn:aws:execute-api:us-west-2:${AWS::AccountId}:*/*/*/*'
+  ApiResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !GetAtt PrivateRestApi.RootResourceId
+      PathPart: !Ref ResourcePath
+      RestApiId: !Ref PrivateRestApi
+  GetMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      ResourceId: !Ref ApiResource
+      RestApiId: !Ref PrivateRestApi
+      HttpMethod: GET
+      AuthorizationType: NONE
+      Integration:
+        IntegrationHttpMethod: POST
+        IntegrationResponses:
+          - StatusCode: 200
+        PassthroughBehavior: WHEN_NO_TEMPLATES
+        RequestTemplates:
+          application/json: "#set($inputRoot = $input.path('$'))\n#set($params = $util.parseJson($input.params().querystring))\n{\n \"method\": \"$context.httpMethod\",\n \"body\" : $input.json('$'),\n \"headers\": {\n      #foreach($param in $input.params().header.keySet())\n      \"$param\": \"$util.escapeJavaScript($input.params().header.get($param))\"\n      #if($foreach.hasNext),#end\n      #end\n  },\n  \"queryStringParameters\": {\n    #foreach($paramName in $input.params().querystring.keySet())\n      \"$paramName\" : \"$util.escapeJavaScript($input.params().querystring.get($paramName))\"\n    #if($foreach.hasNext),#end\n    #end\n  },\n  \"multiValueQueryStringParameters\": {\n      #foreach($key in $method.request.multivaluequerystring.keySet())\n      \"$key\" : [\n        #foreach($val in $method.request.multivaluequerystring.get($key))\n       \"$val\"#if($foreach.hasNext),#end\n        #end\n        ]#if($foreach.hasNext),#end\n      #end\n    },\n  \"test\": \"$method.request.multivaluequerystring.keySet()\"\n}"
+        Type: AWS
+        Uri: !Sub
+          - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
+          - lambdaArn: !ImportValue lambda-arn
+      RequestParameters:
+        method.request.querystring.app: true
+        method.request.querystring.object: true
+        method.request.querystring.select: false
+      MethodResponses:
+        - StatusCode: 200
+  ApiStage:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      DeploymentId: !Ref ApiDeployment
+      RestApiId: !Ref PrivateRestApi
+      StageName: !Ref StageName
+  ApiDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn: LambdaPermission
+    Properties:
+      RestApiId: !Ref PrivateRestApi
+  LambdaPermission:
+    Type: AWS::Lambda::Permission
+    DependsOn: GetMethod
+    Properties:
+      FunctionName: !ImportValue lambda-arn
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Join
+          - ''
+          - - 'arn:aws:execute-api:'
+            - !Ref AWS::Region
+            - ':'
+            - !Ref AWS::AccountId
+            - ':'
+            - !Ref PrivateRestApi
+            - /*/GET/
+            - !Ref ResourcePath
+Outputs:
+  InvokeUrl:
+    Description: Invoke URL of the API gateway
+    Value: !Join
+      - ''
+      - - 'https://'
+        - !Ref PrivateRestApi
+        - .execute-api.
+        - !Ref 'AWS::Region'
+        - .amazonaws.com
+        - /
+        - !Ref StageName
+        - /
+        - !Ref ResourcePath
+    Export:
+      Name: "invoke-url"
+  ApiResourceId:
+    Description: Api Id
+    Value: !Ref PrivateRestApi
+    Export:
+      Name: "api-id"
+  RootResourceId:
+    Description: Api Root Resource Id
+    Value: !GetAtt PrivateRestApi.RootResourceId
+    Export:
+      Name: "root-resource-id"

@@ -1,0 +1,35 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+      {
+          "Sid": "LambdaRoleSpecific",
+          "Effect": "Allow",
+          "Action": [
+              "iam:PutRolePolicy",
+              "iam:AttachRolePolicy",
+              "iam:DetachRolePolicy",
+              "iam:DeleteRolePolicy",
+              "iam:PassRole",
+              "iam:DeleteRole"
+          ],
+          "Resource": "arn:aws:iam::123456789:role/<lambda-role>"
+      },
+      {
+          "Sid": "LambdaFunctionSpecific",
+          "Effect": "Allow",
+          "Action": [
+              "lambda:DeleteFunction",
+              "lambda:AddPermission"
+          ],
+          "Resource": "arn:aws:lambda:us-west-2:123456789:function:<lambda-function->*"
+      },
+      {
+          "Sid": "LambdaLayerSpecific",
+          "Effect": "Allow",
+          "Action": [
+              "lambda:DeleteLayerVersion"
+          ],
+          "Resource": "arn:aws:lambda:us-west-2:123456789:layer:<layer-name>:*"
+      }
+  ]
+}

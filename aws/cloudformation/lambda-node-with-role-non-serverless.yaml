@@ -1,0 +1,98 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Non Serverless Lambda Function template
+Parameters:
+  LambdaRoleName:
+    Type: String
+    Description: Name of lambda IAM role
+    Default: "test-lambda-role"
+  S3Bucket:
+    Type: String
+    Description: S3 bucket that has the zip file for lambda layer
+    Default: "test-lambda-layer-files"
+  S3FunctionKey:
+    Type: String
+    Description: S3 folder that has the zip file for lambda function
+    Default: "lambda-function"
+  S3FunctionZip:
+    Type: String
+    Description: Zip file for lambda function
+    Default: "test_func.zip"
+  S3Key:
+    Type: String
+    Description: S3 folder that has the zip file for lambda layer
+    Default: "lambda-layers/test.zip"
+  SecurityGroupIds:
+    Type: String
+    Description: Security Group Ids for lambda
+  VPCId:
+    Type: String
+    Description: VPC where lambda will be created
+Resources:
+  LambdaExecutionRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      RoleName: !Ref LambdaRoleName
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/AmazonAPIGatewayInvokeFullAccess'
+  LambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: index.handler
+      Runtime: nodejs12.x
+      Code: 
+        S3Bucket: !Ref S3Bucket
+        S3Key: !Join
+          - ''
+          - - !Ref S3FunctionKey
+            - '/'
+            - !Ref S3FunctionZip
+      Description: Test node function
+      MemorySize: 256
+      Timeout: 600
+      Role: !GetAtt
+        - LambdaExecutionRole
+        - Arn
+      VpcConfig:
+        SubnetIds:
+          Fn::Split:
+            - ","
+            - Fn::ImportValue:
+                !Sub ${VPCId}:private-subnet:ids
+        SecurityGroupIds: !Split [ "," , !Ref SecurityGroupIds ]
+      Layers:
+        - !Ref libs
+      Tags:
+        - Key: "CFCreatedResource"
+          Value: !Sub
+            - "CloudFormation Stack ${StackName}"
+            - StackName: !Ref "AWS::StackName"
+  libs:
+    Type: AWS::Lambda::LayerVersion
+    Properties:
+      LayerName: nodejs-pkgs
+      Description: Node packages
+      Content: 
+        S3Bucket: !Ref S3Bucket
+        S3Key: !Ref S3Key
+      CompatibleRuntimes:
+        - nodejs12.x
+Outputs:
+  LambdaFunction:
+    Description: "Lambda Function ARN"
+    Value: !GetAtt LambdaFunction.Arn
+    Export:
+      Name: "lambda-arn"
+  LambdaRole:
+    Description: "Lambda Role ARN"
+    Value: !GetAtt LambdaExecutionRole.Arn
+    Export:
+      Name: "lambda-role-arn"

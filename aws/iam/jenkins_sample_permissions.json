@@ -1,0 +1,23 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+      {
+          "Sid": "General",
+          "Effect": "Allow",
+          "Action": [
+              "ec2:Describe*",
+              "cloudformation:UpdateStack",
+              "cloudformation:CreateStack",
+              "lambda:PublishLayerVersion",
+              "lambda:GetLayerVersion",
+              "lambda:GetFunction",
+              "lambda:CreateFunction",
+              "iam:Get*",
+              "iam:List*Tags",
+              "iam:CreateRole",
+              "apigateway:*"
+          ],
+          "Resource": "*"
+      }
+  ]
+}
