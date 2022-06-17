@@ -1,0 +1,85 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+      {
+          "Effect": "Allow",
+          "Action": [
+              "s3:PutObject",
+              "s3:GetObject"
+          ],
+          "Resource": [
+              "arn:aws:s3:::cw-syn-results-123456789-us-west-2/canary/us-west-2/canary-1/*",
+              "arn:aws:s3:::cw-syn-results-123456789-us-west-2/canary/us-west-2/canary-2/*"
+          ]
+      },
+      {
+          "Effect": "Allow",
+          "Action": [
+              "s3:GetBucketLocation"
+          ],
+          "Resource": [
+              "arn:aws:s3:::cw-syn-results-123456789-us-west-2"
+          ]
+      },
+      {
+          "Effect": "Allow",
+          "Action": [
+              "logs:CreateLogStream",
+              "logs:PutLogEvents",
+              "logs:CreateLogGroup"
+          ],
+          "Resource": [
+              "arn:aws:logs:us-west-2:123456789:log-group:/aws/lambda/*"
+          ]
+      },
+      {
+          "Effect": "Allow",
+          "Action": [
+              "s3:ListAllMyBuckets",
+              "xray:PutTraceSegments"
+          ],
+          "Resource": [
+              "*"
+          ]
+      },
+      {
+          "Effect": "Allow",
+          "Resource": "*",
+          "Action": "cloudwatch:PutMetricData",
+          "Condition": {
+              "StringEquals": {
+                  "cloudwatch:namespace": "CloudWatchSynthetics"
+              }
+          }
+      },
+      {
+          "Effect": "Allow",
+          "Action": [
+              "ec2:CreateNetworkInterface",
+              "ec2:DescribeNetworkInterfaces",
+              "ec2:DeleteNetworkInterface"
+          ],
+          "Resource": [
+              "*"
+          ]
+      },
+      {
+          "Effect": "Allow",
+          "Action": [
+              "kms:Decrypt",
+              "kms:GenerateDataKey"
+          ],
+          "Resource": "arn:aws:kms:us-west-2:123456789:key/aadf78d6f-76ff-42a9-a7d3-sdf76hjd56shjs"
+      },
+      {
+          "Action": [
+              "secretsmanager:GetSecretValue",
+              "secretsmanager:PutSecretValue"
+          ],
+          "Effect": "Allow",
+          "Resource": [
+              "arn:aws:secretsmanager:us-west-2:123456789:secret:canary-auth-SbUqg4"
+          ]
+      }
+  ]
+}

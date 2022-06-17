@@ -1,0 +1,79 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: AWS Step Function for Canary auth.
+Parameters:
+  StateMachineName:
+    Type: String
+    Description: Name of the StateMachine
+  StateMachineRole:
+    Type: String
+    Description: The IAM role for step function execution
+  DefinitionsBucket:
+    Type: String
+    Description: The S3 bucket where definintions json is stored
+  DefinitionsKey:
+    Type: String
+    Description: The S3 bucket where definintions json is stored
+    Default: scripts/step_fn_definitions.json
+  LambdaFunction1:
+    Type: String
+    Description: ARN for the lambda function for step 1
+  LambdaFunction2:
+    Type: String
+    Description: ARN for the lambda function for step 2
+  LogGroupName:
+    Type: String
+    Description: The name of the log group
+    Default: /aws/vendedlogs/states/TestSteps-Logs
+  TriggerName:
+    Type: String
+    Description: The name of the eventbridge trigger
+  TriggerRole:
+    Type: String
+    Description: ARN for the eventbridge trigger
+Resources:
+  MyStateMachine:
+    Type: 'AWS::StepFunctions::StateMachine'
+    Properties:
+      StateMachineName: !Ref StateMachineName
+      RoleArn: !Sub ${StateMachineRole}
+      DefinitionS3Location:
+        Bucket: !Ref DefinitionsBucket
+        Key: !Ref DefinitionsKey
+      DefinitionSubstitutions:
+        Step1Lambda: !Sub ${LambdaFunction1}
+        Step2Lambda: !Sub ${LambdaFunction2}
+      LoggingConfiguration:
+          Destinations:
+            -  CloudWatchLogsLogGroup:
+                  LogGroupArn: !GetAtt
+                                  - StateMachineLogGroup
+                                  - Arn
+          IncludeExecutionData: true
+          Level: ERROR
+      TracingConfiguration:
+        Enabled: false
+  StateMachineLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Ref LogGroupName
+  StateMachineCloudWatchTrigger:
+    Type: 'AWS::Events::Rule'
+    DependsOn:
+      - MyStateMachine
+    Properties:
+      Name: !Ref TriggerName
+      Description: Trigger for Step Function
+      ScheduleExpression: cron(0 * * * ? *)
+      State: "ENABLED"
+      Targets:
+        - Arn: !GetAtt MyStateMachine.Arn
+          RoleArn: !Sub ${TriggerRole}
+          Id: "CanaryStepFunctionTrigger"
+
+Outputs:
+  StateMachineArn:
+    Description: "ARN of the State Machine"
+    Value:
+      Ref: MyStateMachine
+    Export:
+      Name: "state-machine-arn"

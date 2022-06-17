@@ -1,0 +1,66 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: Cloudwatch Event Rule template for lambda trigger
+Parameters:
+  TriggerName:
+    Type: String
+    Description: Name of the eventbridge trigger
+    Default: test-trigger
+  Parameter1:
+    Type: String
+    Description: Parameter 1
+  Parameter2:
+    Type: String
+    Description: Parameter 2 
+  Param3Needed:
+    Type: String
+    Description: Parameter used to determine if parameter 3 needs to be used in the target json
+    Default: "false"
+  Parameter3:
+    Type: String
+    Description: Parameter 3
+  ScheduleCron:
+    Type: String
+    Description: Schedule for running the trigger
+    Default: cron(0 9 * * ? *)
+Conditions:
+  ShowParam3: !Equals [!Ref Param3Needed, "true"]
+Resources:
+  CloudWatchTrigger:
+    Type: 'AWS::Events::Rule'
+    Properties:
+      Name: !Ref TriggerName
+      Description: Trigger template for Object Exporter
+      ScheduleExpression: !Ref ScheduleCron
+      State: "ENABLED"
+      Targets:
+        - Arn: !ImportValue test-lambda-arn
+          Id: "TestTrigger"
+          Input: !Sub
+            - "{\n  \"param1\": ${p1},\n  \"params\": {\n    \"param2\": ${p2}\n ${p3key} ${p3}\n  }\n}"
+            - p1: !Join
+              - ''
+              - - '"'
+                - !Ref Parameter1
+                - '"'
+              p2: !Join
+                - ''
+                - - '"'
+                  - !Ref Parameter2
+                  - '"'
+              p3key: !If 
+                    - ShowParam3
+                    - ',"param3":'
+                    - ''
+              p3: !If 
+                  - ShowParam3
+                  - !Ref Parameter3
+                  - ''
+  LambdaPermission:
+    Type: AWS::Lambda::Permission
+    DependsOn: CloudWatchTrigger
+    Properties:
+      FunctionName: !ImportValue test-lambda-arn
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt CloudWatchTrigger.Arn
