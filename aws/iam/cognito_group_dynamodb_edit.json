@@ -1,0 +1,36 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+      {
+          "Effect": "Allow",
+          "Action": [
+              "dynamodb:BatchGetItem",
+              "dynamodb:BatchWriteItem",
+              "dynamodb:ConditionCheckItem",
+              "dynamodb:PutItem",
+              "dynamodb:DescribeTable",
+              "dynamodb:DeleteItem",
+              "dynamodb:GetItem",
+              "dynamodb:GetRecords",
+              "dynamodb:Scan",
+              "dynamodb:Query",
+              "dynamodb:UpdateItem",
+              "dynamodb:UpdateTable",
+              "dynamodb:PartiQLInsert",
+              "dynamodb:PartiQLUpdate",
+              "dynamodb:PartiQLDelete",
+              "dynamodb:PartiQLSelect"
+          ],
+          "Resource": [
+              "<DynamoDB Table ARN>"
+          ],
+          "Condition": {
+              "ForAllValues:StringEquals": {
+                  "dynamodb:LeadingKeys": [
+                      "<DynamoDB Table Partition Key Value for edit access>"
+                  ]
+              }
+          }
+      }
+  ]
+}
