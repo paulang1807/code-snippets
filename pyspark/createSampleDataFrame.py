@@ -1,6 +1,8 @@
 """ 
 Code snippet to create a pyspark dataframe manually
 and convert a date column from string to date data type
+
+class pyspark.sql.types.StructField(name: str, dataType: pyspark.sql.types.DataType, nullable: bool = True, metadata: Optional[Dict[str, Any]] = None)
 """
 
 from pyspark.sql.types import StructType, StructField, IntegerType, StringType, TimestampType
