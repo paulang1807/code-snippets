@@ -16,3 +16,32 @@ spark.sparkContext.setLogLevel("ERROR")
 from pyspark.sql import SQLContext
 sql_context = SQLContext(sc)
 ```
+
+### SparkSession with Hive Support enabled
+```python
+SparkSession = (
+    SparkSession.builder
+        .enableHiveSupport()
+        .getOrCreate())
+```
+
+### Create SparkSession locally
+```python
+from pyspark.sql import SparkSession
+
+# Create SparkSession locally with 'X' number of worker threads
+appName = "Test app"
+master = "local[X]"
+
+spark = SparkSession.builder \
+    .appName(appName) \
+    .master(master) \
+    .getOrCreate()
+```
+
+### Add columns to dataframe
+```python
+# Assuming we have an existing dataframe with a date column, we can add columns for day, month, year etc. as shown below
+df = df.withColumn("Year", year("Date")).withColumn(
+"Month", month("Date")).withColumn("Day", dayofmonth("Date"))
+```

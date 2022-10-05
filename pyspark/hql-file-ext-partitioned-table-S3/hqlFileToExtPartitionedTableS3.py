@@ -31,7 +31,9 @@ with open(sql_file) as shql:
     file_txt = shql.read()
 
 # Replace schema name in query
-sqlQuery = file_txt.replace('{}',schema)
+# sqlQuery = file_txt.replace('{}',schema)
+sqlQuery = file_txt.format(**locals())   # Use locals() (https://docs.python.org/2/library/functions.html#locals) to parse named parameters
+
 print("*** QUERY ***\n", sqlQuery)
 
 #Query hive table
