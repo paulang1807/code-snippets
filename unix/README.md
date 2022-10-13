@@ -121,6 +121,7 @@ command1 || command2
 
 ```bash
 IFS=$'\n'       # make newlines the only separator
+IFS=':'         # used to specify separators, in this example ':'
 set -f          # disable globbing
 set -e          # stop script if any command fails
 ```
