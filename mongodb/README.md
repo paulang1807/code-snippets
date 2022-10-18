@@ -44,3 +44,20 @@ max_val = mdb["collection_name"].find().sort("col_name", pymongo.DESCENDING).lim
 lst_max_val = list(max_val)
 str_max_val = lst_max_val[0]["col_name"]
 ```
+
+### Filter data and get count
+```python
+coll_ct = mdb["collection_name"].aggregate([
+  { "$match": { "$and": [{"col_1": <filter_value_for_col1>, "col_2": <filter_value_for_col2>}]}},  # Filter Data
+  { "$group": { "_id": None, "count": { "$sum": 1   }}}   # Group and count
+])
+```
+
+### Filter data and get random sample
+```python
+m_col = mdb["collection_name"].aggregate([
+  { "$match": { "$and": [{"col_1": <filter_value_for_col1>, "col_2": <filter_value_for_col2>}]}},  # Filter Data
+  { "$sample": { "size": <sample size> }},   # Specify sample size
+  { "$project": {"col1":1, "col2":1}}        # Specify desired columns
+])
+```
