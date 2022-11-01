@@ -27,6 +27,7 @@ const test_canary = async function () {
     }
 
   // Fetch secrets
+  log.log("Fetching Secrets...")
   let secrets = await getSecrets("canary-auth-step3")
   let secretsObj = JSON.parse(secrets.SecretString);
 
