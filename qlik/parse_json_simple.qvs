@@ -1,0 +1,39 @@
+// Code Snippet to parse a json column containing repeating groups of key value pairs
+// Example JSON:
+    // {
+    // "Attribute1": "Val1",
+    // "Attribute2": "Val2",
+    // "Attribute2": "Val3",
+    // "Attribute2": "Val4a::Val4b"   Values containing ':' are substituted by '::' to avoid confusing it with the key-value separator
+    // }
+
+// Split each threshold group into separate tables using Generic Load
+TSplitConfigs:
+Generic
+LOAD
+MetricID,
+Trim(TextBetween(key, '"', '"')) as key,
+replace(Trim(replace(val, '"', '')),'~',':') as val
+;
+LOAD
+MetricID,
+SubField(keyvalpairs, ':', 1) as key,
+SubField(keyvalpairs, ':', 2) as val
+;
+LOAD
+MetricID,
+// First remove the enclosing curly braces. Then get each key value pair using the 'SubField' function. Replace '::' with another special character '~'
+// to avoid confusing it with the key-value separator when parsing key and val from the pairs
+replace(SubField(trim(replace(replace(json_field,'{',''),'}','')), ','),'::','~') as keyvalpairs
+Resident BaseTable
+;
+
+// Loop through the tables created by Generic Load and left join them to the base table
+FOR i = NoOfTables()-1 to 0 STEP -1 
+  LET vTable=TableName($(i)); 
+  // Merge the generic tables back to the base table
+  IF WildMatch('$(vTable)', 'TSplitConfigs.*') THEN 
+    LEFT JOIN (BaseTable) LOAD * RESIDENT [$(vTable)]; 
+    DROP TABLE  [$(vTable)];
+  ENDIF  
+NEXT i
