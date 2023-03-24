@@ -3,6 +3,8 @@ import pandas as pd
 import boto3
 from boto3.dynamodb.types import TypeDeserializer
 
+deserializer = TypeDeserializer()
+
 def lambda_handler(event, context):
     print("EVENT: ", event)
     for record_index,record in enumerate(event["Records"]):
