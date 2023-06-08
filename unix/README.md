@@ -4,8 +4,10 @@
 ```bash
 s='one_two_three_four_five'
 A="$(cut -d'_' -f2 <<<"$s")"
-echo "$A"
-# Returns 'two' which is the second field based on '-' as delimiter
+echo "$A"     # Returns 'two' which is the second field based on '-' as delimiter
+
+B="$(cut -d'_' -f-2 <<<"$s")"
+echo "$B"     # Returns 'one-two' which are the first two fields based on '-' as delimiter
 ```
 ### [Translate (tr)](https://en.wikipedia.org/wiki/Tr_(Unix))
 ```bash
