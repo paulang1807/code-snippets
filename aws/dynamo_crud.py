@@ -25,6 +25,9 @@ class dynamoDB:
         """
         Base function to scan table filtered by the key value pairs of column names and values passed as parameter
         The column names can be both partition and sort keys as well as any other column in the table
+        NOTE: If the total number of scanned items exceeds the maximum dataset size limit of 1 MB, 
+        the scan stops and results are returned to the user as a LastEvaluatedKey value to continue 
+        the scan in a subsequent operation
         """
 
         expFil=""
@@ -57,12 +60,21 @@ class dynamoDB:
         # Remove the 'OR' at end of the filter expression
         expFil = expFil.rstrip(" OR ")
 
-        scanResponse = tableName.scan(
-            FilterExpression = expFil,
-            ExpressionAttributeNames = expAttrCols,
-            ExpressionAttributeValues = expAttrVals
-        )
-        
+        queryParams={
+            "FilterExpression": expFil,
+            "ExpressionAttributeNames": {"#metricId": "metricId"},
+            "ExpressionAttributeValues": expAttrVals
+        }
+
+        while True:
+            if lastEvalKey is not None:
+                queryParams["ExclusiveStartKey"] = lastEvalKey
+            scanResponse = tableName.scan(**queryParams)
+            print("SCAN RESP: ", len(scanResponse['Items']), scanResponse)
+            if len(scanResponse['Items']) == 0 and 'LastEvaluatedKey' in scanResponse:
+                lastEvalKey = scanResponse['LastEvaluatedKey']
+            else:
+                break
         return scanResponse
     
     def queryTable(self, tableName, dictKeys, dictFil=None):
