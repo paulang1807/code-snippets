@@ -1,7 +1,11 @@
-# Welcome to your CDK TypeScript project
+# Initialize
+Initialize a project using the `cdk init` command: 
+```
+mkdir cdk-workshop && cd cdk-workshop
+cdk init sample-app --language typescript
+```
 
-You should explore the contents of this project. It demonstrates a CDK app with an instance of a stack (`CdkWorkshopStack`)
-which contains an Amazon SQS queue that is subscribed to an Amazon SNS topic.
+It creates a CDK app with an instance of a stack (`CdkWorkshopStack`).
 
 The `cdk.json` file tells the CDK Toolkit how to execute your app.
 
@@ -25,7 +29,7 @@ The `cdk.json` file tells the CDK Toolkit how to execute your app.
 node_modules is maintained by npm and includes all your project’s dependencies.
 
 ## Project Synthesis
-When CDK apps are executed, they produce an AWS CloudFormation template for each stack defined in the application. The template json file is generated in the cdk.out folder
+When CDK apps are executed, they produce an AWS CloudFormation template for each stack defined in the application. The template json file is generated in the **cdk.out** folder
 Use the `cdk synth` command to synthesize a CDK app. 
 The CDK CLI requires you to be in the same directory as your cdk.json file.
 
