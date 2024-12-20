@@ -45,3 +45,33 @@ spark = SparkSession.builder \
 df = df.withColumn("Year", year("Date")).withColumn(
 "Month", month("Date")).withColumn("Day", dayofmonth("Date"))
 ```
+
+### Cast column as desired datatype
+```python
+# Cast column as date
+df = df.withColumn("datecolname",df["datecolname"].cast(DateType()))
+```
+
+### Filter dataframe
+```python
+from pyspark.sql.functions import col
+# Apply multiple filter conditions
+df = df.filter(col("col1") == "filterval1").filter(col("col1") != "filterval2")
+
+# Filter one column based on another
+df = df.filter(col("<col_to_filter>") <= col("<filter_based_on_col>"))
+```
+
+### Set column value conditionally
+```python
+df = df.withColumn("newColName"), when(df.col1 == x, df.col2 + df.col3).otherwise(df.col2 - df.col3)
+```
+
+### Pyspark to Pandas
+```python
+# Convert Pyspark df to pandas
+pd_df = py_df.toPandas()
+
+# Convert Pandas df to Pyspark
+py_df = spark.createDataFrame(pd_df)
+```
