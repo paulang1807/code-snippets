@@ -12,17 +12,24 @@ s3_resource = boto3.resource('s3')
 
 bucketName = "bucket-name"
 bucketKey = "parent-dir/child-dir/"
-fileKey = bucketKey + "test.csv"
+csvFileKey = bucketKey + "test.csv"
+jsonFileKey = bucketKey + "data.json"
 
 # Read from single file
-obj = s3.get_object(Bucket=bucketName, Key=fileKey)
+obj = s3.get_object(Bucket=bucketName, Key=csvFileKey)
+# file_content = obj['Body'].read() # returns content as bytes
 df = pd.read_csv(io.BytesIO(obj['Body'].read()))
 df.head()
 
-# write to file
+# write csv to file
 csv_buffer = StringIO()
 df.to_csv(csv_buffer, index=False)
-s3_resource.Object(bucketName, fileKey).put(Body=csv_buffer.getvalue())
+s3_resource.Object(bucketName, csvFileKey).put(Body=csv_buffer.getvalue())
+
+# Write json to file
+data = {'name': 'John', 'age': 30, 'city': 'New York'}
+json_data = json.dumps(data)
+s3_resource.Object(bucketName, jsonFileKey).put(Body=json_data)
 
 # Read content from all files in an s3 location
 bucket = s3_resource.Bucket(bucketName)
